@@ -79,11 +79,22 @@ npm run check
 {
   "installCommand": "npm install",
   "buildCommand": "npm run build",
-  "outputDirectory": "apps/web/dist"
+  "outputDirectory": "dist"
 }
 ```
 
 Vercel 会构建 Vue 前端，并自动部署 `/api/friends` 与 `/api/submit-link` 两个 Node.js 函数。
+
+建议在 Vercel 项目设置中保持：
+
+```txt
+Root Directory: ./
+Build Command: npm run build
+Output Directory: dist
+Install Command: npm install
+```
+
+不要把 Root Directory 设置成 `apps/web`，否则仓库根目录下的 `api/` 云函数不会一起部署。
 
 ### 2. Vercel 构建失败排查
 
@@ -94,6 +105,14 @@ npm warn allow-scripts ... esbuild@... (postinstall: node install.js)
 ```
 
 通常说明 npm 在提醒 `esbuild` 带有安装脚本。项目已在 `package.json` 中显式允许 `esbuild`，并通过 `.npmrc` 关闭本地生成 `package-lock.json`，避免 Windows 生成的 lockfile 只锁定 `win32` 原生包，导致 Vercel 的 Linux 构建机缺少 `esbuild` 或 `rollup` 的 Linux 二进制依赖。
+
+如果 Vercel 日志里出现：
+
+```txt
+Error: No Output Directory named "dist" found after the Build completed.
+```
+
+请确认 Vercel 项目设置里的 Output Directory 是 `dist`，并且已推送包含 `apps/web/vite.config.mjs` 中 `build.outDir = "../../dist"` 的最新提交。修改构建配置后，建议执行一次 `Redeploy -> Clear Build Cache and Redeploy`。
 
 请确认提交到 GitHub 的文件中不要包含 `package-lock.json`。如果已经提交过，删除后重新提交：
 
