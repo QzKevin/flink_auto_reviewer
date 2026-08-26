@@ -77,6 +77,7 @@ npm run check
 
 ```json
 {
+  "installCommand": "npm install",
   "buildCommand": "npm run build",
   "outputDirectory": "apps/web/dist"
 }
@@ -84,7 +85,25 @@ npm run check
 
 Vercel 会构建 Vue 前端，并自动部署 `/api/friends` 与 `/api/submit-link` 两个 Node.js 函数。
 
-### 2. 配置环境变量
+### 2. Vercel 构建失败排查
+
+如果 Vercel 日志里出现：
+
+```txt
+npm warn allow-scripts ... esbuild@... (postinstall: node install.js)
+```
+
+通常说明 npm 在提醒 `esbuild` 带有安装脚本。项目已在 `package.json` 中显式允许 `esbuild`，并通过 `.npmrc` 关闭本地生成 `package-lock.json`，避免 Windows 生成的 lockfile 只锁定 `win32` 原生包，导致 Vercel 的 Linux 构建机缺少 `esbuild` 或 `rollup` 的 Linux 二进制依赖。
+
+请确认提交到 GitHub 的文件中不要包含 `package-lock.json`。如果已经提交过，删除后重新提交：
+
+```bash
+git rm package-lock.json
+git commit -m "Fix Vercel npm platform dependencies"
+git push
+```
+
+### 3. 配置环境变量
 
 在 Vercel 项目设置中添加：
 
@@ -100,7 +119,7 @@ DRY_RUN_SUBMISSIONS=false
 
 `GITHUB_TOKEN` 不会进入前端，只存在于 Vercel 云函数。建议使用 fine-grained token，并仅授予目标仓库触发 Actions 所需权限。
 
-### 3. 首次预览测试
+### 4. 首次预览测试
 
 如果你只想先测试表单与接口响应，可以临时设置：
 
