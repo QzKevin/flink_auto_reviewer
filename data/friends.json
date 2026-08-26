@@ -7,5 +7,13 @@
     "rss": "https://example.com/feed.xml",
     "source": "manual",
     "createdAt": "2026-08-26T00:00:00.000Z"
+  },
+  {
+    "name": "Kayin's Blog",
+    "url": "https://far.smatrix.top",
+    "description": "测试5个字",
+    "source": "submitted",
+    "createdAt": "2026-08-26T13:38:49.769Z",
+    "avatar": "https://bu.dusays.com/2026/08/08/6a76e139b3c50.jpeg"
   }
 ]
