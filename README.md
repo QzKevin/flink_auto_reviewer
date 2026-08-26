@@ -16,6 +16,7 @@
 ├─ scripts/
 │  ├─ lib/link.mjs              # 友链标准化与校验逻辑
 │  ├─ validate-friends.mjs      # 本地/CI 数据校验
+│  ├─ ensure-labels.mjs         # 初始化/更新 GitHub PR 标签
 │  ├─ create-link-pr.mjs        # workflow_dispatch 后生成 PR 改动
 │  ├─ scan-pending-prs.mjs      # 60 分钟巡检并自动审核
 │  └─ auto-merge-link-pr.mjs    # 自动合并入口别名
@@ -29,7 +30,7 @@
 
 1. 访客填写并提交友链表单。
 2. `/api/submit-link` 完成基础校验后调用 GitHub REST API 触发 `link-submit.yml`。
-3. `link-submit.yml` 将友链写入新分支的 `data/friends.json`，并创建带有以下标签的 PR：
+3. `link-submit.yml` 会先初始化所需 GitHub Labels，再将友链写入新分支的 `data/friends.json`，并创建带有以下标签的 PR：
    - `friend-link`
    - `pending-review`
    - `auto-review-after-12h`
@@ -168,6 +169,23 @@ Settings -> Actions -> General -> Workflow permissions
 Read and write permissions
 Allow GitHub Actions to create and approve pull requests
 ```
+
+### Labels 初始化
+
+工作流会自动创建或更新所需的 PR Labels，包括：
+
+```txt
+friend-link
+pending-review
+auto-review-after-12h
+already-added
+auto-review-passed
+auto-review-failed
+needs-human-review
+do-not-auto-merge
+```
+
+如果旧版本运行时报 `could not add label: 'friend-link' not found`，说明当时仓库还没有对应 Label。推送当前版本后重新提交一次友链即可；也可以在 GitHub 仓库的 `Issues -> Labels` 中手动创建同名标签。
 
 ### 可选仓库变量
 

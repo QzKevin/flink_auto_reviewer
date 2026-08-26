@@ -27,5 +27,8 @@ jobs:
         with:
           node-version: 20
 
+      - name: Ensure workflow labels
+        run: node scripts/ensure-labels.mjs
+
       - name: Review mature friend link PRs
         run: node scripts/scan-pending-prs.mjs

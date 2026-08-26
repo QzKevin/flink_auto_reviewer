@@ -39,6 +39,11 @@ jobs:
         with:
           node-version: 20
 
+      - name: Ensure workflow labels
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/ensure-labels.mjs
+
       - name: Prepare friend link change
         id: prepare
         run: node scripts/create-link-pr.mjs
