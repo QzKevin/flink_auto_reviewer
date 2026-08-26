@@ -1,0 +1,76 @@
+name: Friend Link Submit
+
+on:
+  workflow_dispatch:
+    inputs:
+      payload:
+        description: JSON payload from the public submit API
+        required: true
+        type: string
+      submissionId:
+        description: Unique submission id
+        required: true
+        type: string
+      submittedAt:
+        description: ISO submission timestamp
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: friend-link-${{ inputs.submissionId }}
+  cancel-in-progress: false
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Prepare friend link change
+        id: prepare
+        run: node scripts/create-link-pr.mjs
+        env:
+          PAYLOAD_JSON: ${{ inputs.payload }}
+          SUBMISSION_ID: ${{ inputs.submissionId }}
+          SUBMITTED_AT: ${{ inputs.submittedAt }}
+          SITE_BASE_URL: ${{ vars.SITE_BASE_URL }}
+
+      - name: Create pull request
+        if: steps.prepare.outputs.no_change != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH_NAME: ${{ steps.prepare.outputs.branch_name }}
+          PR_TITLE: ${{ steps.prepare.outputs.pr_title }}
+          PR_BODY: ${{ steps.prepare.outputs.pr_body }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH_NAME"
+          git add data/friends.json
+          git commit -m "$PR_TITLE"
+          git push --force-with-lease origin "$BRANCH_NAME"
+          gh pr create \
+            --base "${GITHUB_REF_NAME}" \
+            --head "$BRANCH_NAME" \
+            --title "$PR_TITLE" \
+            --body "$PR_BODY" \
+            --label "friend-link" \
+            --label "pending-review" \
+            --label "auto-review-after-12h"
+
+      - name: Report duplicate
+        if: steps.prepare.outputs.no_change == 'true'
+        run: echo "Friend link already exists. No pull request created."

@@ -1,0 +1,20 @@
+{
+  "name": "flink-auto-reviewer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm --workspace apps/web run dev",
+    "build": "npm --workspace apps/web run build",
+    "preview": "npm --workspace apps/web run preview",
+    "typecheck": "npm --workspace apps/web run typecheck",
+    "validate:friends": "node scripts/validate-friends.mjs",
+    "check": "npm run validate:friends && npm run typecheck && npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,31 @@
+name: Friend Link Review Watch
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    env:
+      AUTO_REVIEW_AFTER_HOURS: 12
+      REQUIRE_BACKLINK: ${{ vars.REQUIRE_BACKLINK || 'false' }}
+      SITE_BASE_URL: ${{ vars.SITE_BASE_URL || '' }}
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Review mature friend link PRs
+        run: node scripts/scan-pending-prs.mjs

@@ -1,0 +1,19 @@
+{
+  "name": "@flink-auto-reviewer/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.app.json"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.5",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.2.0"
+  }
+}
