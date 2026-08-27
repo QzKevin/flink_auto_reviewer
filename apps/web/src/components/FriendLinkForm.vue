@@ -60,45 +60,46 @@ async function handleSubmit() {
 <template>
   <form class="form-panel" @submit.prevent="handleSubmit">
     <div class="section-heading">
-      <p class="eyebrow">Submit</p>
+      <p class="eyebrow">SUBMIT / INTAKE</p>
       <h2>提交你的友链</h2>
       <p>通过表单提交后，系统会创建一个待审核 PR；人工 12 小时内未处理时，巡检 Action 会自动复核并合并。</p>
     </div>
 
     <label>
-      <span>站点名称</span>
+      <span><em>01</em> 站点名称</span>
       <input v-model="form.name" type="text" required maxlength="60" placeholder="例如：Kayin Blog" />
     </label>
 
     <label>
-      <span>站点地址</span>
+      <span><em>02</em> 站点地址</span>
       <input v-model="form.url" type="url" required placeholder="https://example.com" />
     </label>
 
     <label>
-      <span>头像地址</span>
+      <span><em>03</em> 头像地址</span>
       <input v-model="form.avatar" type="url" placeholder="https://example.com/avatar.png" />
     </label>
 
     <label>
-      <span>一句话介绍</span>
+      <span><em>04</em> 一句话介绍</span>
       <textarea v-model="form.description" required maxlength="120" placeholder="简单介绍你的站点内容"></textarea>
     </label>
 
     <div class="field-grid">
       <label>
-        <span>RSS 地址</span>
+        <span><em>05</em> RSS 地址</span>
         <input v-model="form.rss" type="url" placeholder="https://example.com/feed.xml" />
       </label>
 
       <label>
-        <span>联系方式</span>
-        <input v-model="form.contact" type="text" maxlength="120" placeholder="邮箱或 GitHub ID，仅写入 PR 说明" />
+        <span><em>06</em> 联系方式</span>
+        <input v-model="form.contact" type="text" maxlength="120" placeholder="邮箱 / GitHub ID" />
       </label>
     </div>
 
     <button class="primary-button" :disabled="isSubmitting" type="submit">
-      {{ isSubmitting ? "提交中..." : "提交友链" }}
+      <span>{{ isSubmitting ? "提交中..." : "提交友链" }}</span>
+      <small>{{ isSubmitting ? "PENDING" : "CREATE PR" }}</small>
     </button>
 
     <div v-if="result" class="result-box" :class="{ success: result.ok, error: !result.ok }" role="status">
