@@ -1,5 +1,13 @@
 [
   {
+    "name": "deepseek",
+    "url": "https://www.deepseek.com",
+    "description": "不一般的小纸箱",
+    "source": "submitted",
+    "createdAt": "2026-08-27T12:04:56.862Z",
+    "avatar": "https://bu.dusays.com/2026/08/08/6a76e139b3c50.jpeg"
+  },
+  {
     "name": "Hyperpost",
     "url": "https://example.com",
     "avatar": "https://example.com/avatar.png",
