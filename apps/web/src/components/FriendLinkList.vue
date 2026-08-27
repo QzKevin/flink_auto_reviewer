@@ -11,7 +11,7 @@ defineProps<{
 <template>
   <section class="list-panel">
     <div class="section-heading">
-      <p class="eyebrow">Directory</p>
+      <p class="eyebrow">DIRECTORY / ARCHIVE</p>
       <h2>已收录友链</h2>
       <p>这里直接读取仓库中的 <code>data/friends.json</code>，合并后的友链会在下一次部署后展示。</p>
     </div>
@@ -25,6 +25,10 @@ defineProps<{
         <img v-if="friend.avatar" :src="friend.avatar" :alt="`${friend.name} avatar`" loading="lazy" />
         <div v-else class="avatar-fallback">{{ friend.name.slice(0, 1).toUpperCase() }}</div>
         <div>
+          <div class="friend-meta">
+            <span>{{ friend.source }}</span>
+            <time :datetime="friend.createdAt">{{ new Date(friend.createdAt).toLocaleDateString("zh-CN") }}</time>
+          </div>
           <h3>{{ friend.name }}</h3>
           <p>{{ friend.description }}</p>
           <span>{{ friend.url }}</span>

@@ -2,11 +2,13 @@ name: Friend Link Review Watch
 
 on:
   schedule:
-    - cron: "17 * * * *"
+    # GitHub scheduled workflows are best-effort and can be delayed under load.
+    # Use an off-peak minute to reduce queueing versus common :00/:15/:30/:45 slots.
+    - cron: "43 * * * *"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
   issues: write
 
